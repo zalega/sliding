@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Svelte Kit: Debug",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/vite",
+            "runtimeArgs": [
+                "dev",
+                "--port",
+                "3000"
+            ],
+            "port": 9229,
+            "restart": true,
+            "timeout": 30000,
+            "console": "integratedTerminal"
+        }
+    ]
+}
