@@ -30,7 +30,6 @@
 		const updatedPuzzle = Array.from({ length: Number($rows) }, (_, i) =>
 			Array.from({ length: $cols }, (_, j) => count++)
 		);
-		console.log(updatedPuzzle, selection, $cols, $rows);
 		puzzle.set(updatedPuzzle);
 	}
 
