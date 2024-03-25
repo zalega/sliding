@@ -1,13 +1,17 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
+	import { Button, Overlay } from '@svelteuidev/core';
+	import { writable, type Writable } from 'svelte/store';
+	import { flipboard } from '@svelteuidev/motion';
 
 	// Define the puzzle size
 	const rows = 3;
 	const cols = 3;
 
+	let isSolved = false;
+	let intitialLoad = true;
+
 	// Define the puzzle grid
-	const puzzle = writable(generatePuzzle());
+	const puzzle: Writable<number[][]> = writable(generatePuzzle());
 
 	function generatePuzzle() {
 		// Generate a solved puzzle
@@ -27,17 +31,59 @@
 			flatPuzzle.slice(i * cols, (i + 1) * cols)
 		);
 		puzzle.set(shuffledPuzzle);
+		isSolved = false;
+		intitialLoad = false;
 	}
 
 	function moveTile(row: number, col: number) {
-		// Move the tile if possible
-		// Your move logic here
+		// Find the row and column indices of the empty space
+		let emptyRowIndex = -1;
+		let emptyColIndex = -1;
+		$puzzle.forEach((r, i) => {
+			r.forEach((_, j) => {
+				if ($puzzle[i][j] === rows * cols) {
+					emptyRowIndex = i;
+					emptyColIndex = j;
+				}
+			});
+		});
+
+		// Check if the clicked tile is adjacent to the empty space
+		const isAdjacent =
+			(row === emptyRowIndex && Math.abs(col - emptyColIndex) === 1) ||
+			(col === emptyColIndex && Math.abs(row - emptyRowIndex) === 1);
+
+		if (isAdjacent) {
+			// Swap the clicked tile with the empty space
+			const updatedPuzzle = $puzzle.map((r) => [...r]); // Create a shallow copy
+			const temp = updatedPuzzle[row][col];
+			updatedPuzzle[row][col] = updatedPuzzle[emptyRowIndex][emptyColIndex];
+			updatedPuzzle[emptyRowIndex][emptyColIndex] = temp;
+
+			// Update the puzzle state
+			puzzle.set(updatedPuzzle);
+		}
+		isSolved = checkIsSolved();
 	}
 
-	onMount(() => {
-		// Initial shuffle on component mount
-		shuffle();
-	});
+	function checkIsSolved(): boolean {
+		const solvedPuzzle = generatePuzzle(); // Assuming generatePuzzle() generates the solved puzzle
+
+		// Compare the current puzzle with the solved puzzle
+		for (let i = 0; i < rows; i++) {
+			for (let j = 0; j < cols; j++) {
+				if ($puzzle[i][j] !== solvedPuzzle[i][j]) {
+					return false;
+				}
+			}
+		}
+
+		return true; // Puzzle is solved
+	}
+	// onMount(() => {
+	// 	// Initial shuffle on component mount
+	// 	shuffle();
+	// });
 
 	export const PuzzleComponent = {
 		puzzle,
@@ -46,21 +92,45 @@
 	};
 </script>
 
-<div class="w-[200px] h-[200px] grid grid-cols-3 gap-2">
-	{#each $puzzle as row, i}
-		{#each row as tile, j}
-			<button
-				on:click={() => moveTile(i, j)}
-				class="w-10 h-10 bg-gray-200 border border-gray-400 flex justify-center items-center cursor-pointer text-lg p-4"
-			>
-				{#if i === rows - 1 && j === cols - 1}
-					<div class="text-lg"></div>
-				{:else}
-					<div class="text-lg">{tile}</div>
-				{/if}
-			</button>
+<div>
+	<div class="w-[400px] h-[400px] grid grid-cols-3 gap-2">
+		{#each $puzzle as row, i}
+			{#each row as tile, j}
+				<button
+					on:click={() => moveTile(i, j)}
+					disabled={intitialLoad}
+					class="w-300 h-300 bg-gray-200 border border-gray-400 flex justify-center items-center cursor-pointer text-lg p-4"
+				>
+					{#if $puzzle[i][j] === rows * cols}
+						<div class="text-lg"></div>
+					{:else}
+						<div class="text-lg">{tile}</div>
+					{/if}
+				</button>
+			{/each}
 		{/each}
-	{/each}
+	</div>
+
+	<div class="mt-10">
+		{#if intitialLoad}
+			<Button
+				on:click={shuffle}
+				variant="gradient"
+				gradient={{ from: 'teal', to: 'yellow', deg: 46 }}
+				radius="xl"
+				size="lg"
+			>
+				Shuffle
+			</Button>
+		{/if}
+	</div>
+	<div>
+		{#if isSolved}
+			<Overlay opacity={0.6} color="#000" zIndex={5} center>
+				<p in:flipboard={{ duration: 400 }} class="text-green-500 mt-2">Puzzle Solved!</p>
+			</Overlay>
+		{/if}
+	</div>
 </div>
 
 <style>

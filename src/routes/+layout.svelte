@@ -1,5 +1,6 @@
 <script>
 	import '../app.css';
+	import { SvelteUIProvider } from '@svelteuidev/core';
 </script>
 
 <style lang="postcss">
@@ -7,4 +8,7 @@
 		background-color: theme(colors.gray.100);
 	}
 </style>
-<slot />
+
+<SvelteUIProvider themeObserver="dark">
+	<slot />
+</SvelteUIProvider>
