@@ -1,8 +1,30 @@
 <script>
 	import SelectionComponent from '$lib/components/SelectionComponent.svelte';
+	import { flipboard } from '@svelteuidev/motion';
+	import { onMount } from 'svelte';
+
+	let visible = false;
+
+	onMount(() => {
+		// Set visible to true after a short delay to trigger the transition on page load
+		setTimeout(() => {
+			visible = true;
+		}, 100); // Adjust the delay as needed
+	});
 </script>
 
-<h1 class="text-3xl font-bold underline">Hello world!</h1>
+<div class="h-[100px]">
+	{#if visible}
+		<p
+			in:flipboard={{ duration: 400 }}
+			class="flex justify-center text-3xl font-bold underline m-10"
+		>
+			Willkommen zu meinem personalisiertem Sliding Puzzle!
+		</p>
+	{:else}
+		<p class="flex justify-center text-3xl font-bold underline m-10"></p>
+	{/if}
+</div>
 
 <div class="flex gap-5 justify-center">
 	<SelectionComponent
