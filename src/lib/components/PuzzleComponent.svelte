@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Overlay } from '@svelteuidev/core';
+	import { Button, Overlay, Image as SvelteImage } from '@svelteuidev/core';
 	import { writable, type Writable } from 'svelte/store';
 	import { flipboard } from '@svelteuidev/motion';
 	import { onMount } from 'svelte';
@@ -12,6 +12,8 @@
 
 	let isSolved = false;
 	let intitialLoad = true;
+
+	const imageUrl = ['/first.png', '/second.png', '/third.png'];
 
 	type PuzzleType = number[][];
 
@@ -99,7 +101,9 @@
 		return true; // Puzzle is solved
 	}
 
-	onMount(() => {
+	let puzzleImagePieces: Writable<string[]> = writable([]);
+
+	onMount(async () => {
 		if (selection === 1) {
 			rows.set(3);
 			cols.set(3);
@@ -110,23 +114,67 @@
 			rows.set(5);
 			cols.set(5);
 		}
+		const image = new Image();
+        image.src = `/src/lib/images${imageUrl[selection - 1]}`;
+
+        await new Promise<void>((resolve, reject) => {
+            image.onload = () => {
+                const pieceWidth = image.width / $cols;
+                const pieceHeight = image.height / $rows;
+
+                const updatedPuzzleImagePieces = [];
+
+                for (let j = 0; j < $rows; j++) {
+                    for (let i = 0; i < $cols; i++) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = pieceWidth;
+                        canvas.height = pieceHeight;
+                        const context = canvas.getContext('2d');
+                        if (context) {
+                            context.drawImage(
+                                image,
+                                i * pieceWidth,
+                                j * pieceHeight,
+                                pieceWidth,
+                                pieceHeight,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
+                            updatedPuzzleImagePieces.push(canvas.toDataURL());
+                        }
+                    }
+                }
+				puzzleImagePieces.set(updatedPuzzleImagePieces); // Update the store with new puzzle pieces
+				resolve();
+			};
+			image.onerror = (error) => {
+				reject(error);
+			};
+		});
+		
 	});
+
+	$: {
+		puzzleImagePieces;
+	}
 </script>
 
 <div>
 	{#if selection === 1}
-		<div class="w-[800px] h-[800px] grid grid-cols-3 gap-2">
+		<div class="w-[800px] h-[800px] grid grid-cols-3 gap-1">
 			{#each $puzzle as row, i}
 				{#each row as tile, j}
 					<button
 						on:click={() => moveTile(i, j)}
 						disabled={intitialLoad}
-						class="w-300 h-300 bg-gray-200 border border-gray-400 flex justify-center items-center cursor-pointer text-lg p-4"
+						class="w-300 h-300 bg-gray-200 border flex justify-center items-center cursor-pointer text-lg"
 					>
 						{#if $puzzle[i][j] === $rows * $cols}
 							<div class="text-lg"></div>
 						{:else}
-							<div class="text-lg">{tile}</div>
+							<SvelteImage src={$puzzleImagePieces[tile - 1]} alt={`puzzle piece ${tile}`} />
 						{/if}
 					</button>
 				{/each}
@@ -154,18 +202,18 @@
 			{/if}
 		</div>
 	{:else if selection === 2}
-		<div class="w-[800px] h-[800px] grid grid-cols-4 gap-2">
+		<div class="w-[800px] h-[800px] grid grid-cols-4 gap-1">
 			{#each $puzzle as row, i}
 				{#each row as tile, j}
 					<button
 						on:click={() => moveTile(i, j)}
 						disabled={intitialLoad}
-						class="w-300 h-300 bg-gray-200 border border-gray-400 flex justify-center items-center cursor-pointer text-lg p-4"
+						class="w-300 h-300 bg-gray-200 flex justify-center items-center cursor-pointer text-lg"
 					>
 						{#if $puzzle[i][j] === $rows * $cols}
 							<div class="text-lg"></div>
 						{:else}
-							<div class="text-lg">{tile}</div>
+							<SvelteImage src={$puzzleImagePieces[tile - 1]} alt={`puzzle piece ${tile}`} />
 						{/if}
 					</button>
 				{/each}
@@ -193,18 +241,18 @@
 			{/if}
 		</div>
 	{:else if selection === 3}
-		<div class="w-[800px] h-[800px] grid grid-cols-5 gap-2">
+		<div class="w-[800px] h-[800px] grid grid-cols-5 gap-1">
 			{#each $puzzle as row, i}
 				{#each row as tile, j}
 					<button
 						on:click={() => moveTile(i, j)}
 						disabled={intitialLoad}
-						class="w-100 h-100 bg-gray-200 border border-gray-400 flex justify-center items-center cursor-pointer text-lg p-4"
+						class="w-100 h-100 bg-gray-200 border flex justify-center items-center cursor-pointer text-lg"
 					>
 						{#if $puzzle[i][j] === $rows * $cols}
 							<div class="text-lg"></div>
 						{:else}
-							<div class="text-lg">{tile}</div>
+							<SvelteImage src={$puzzleImagePieces[tile - 1]} alt={`puzzle piece ${tile}`} />
 						{/if}
 					</button>
 				{/each}
