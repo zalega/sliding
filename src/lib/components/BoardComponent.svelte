@@ -46,10 +46,7 @@
 			>
 				Shuffle
 			</Button>
-		{/if}
-	</div>
-	<div class="mt-10">
-		{#if intitialLoad}
+		{:else}
 			<Button
 				on:click={reloadPage}
 				variant="gradient"
@@ -65,8 +62,41 @@
 
 <div>
 	{#if isSolved}
-		<Overlay opacity={0.6} color="#000" zIndex={5} center>
-			<p in:flipboard={{ duration: 400 }} class="text-green-500 mt-2">Puzzle Solved!</p>
+		<Overlay
+			opacity={0.9}
+			zIndex={5}
+			class="flex align-middle justify-center"
+			center
+			gradient={`linear-gradient(105deg, black 20%, #312f2f 50%, $gray400 100%)`}
+		>
+			<Group class="flex flex-col justify-center">
+				<p in:flipboard={{ duration: 800 }} class="text-green-500 mt-2 text-3xl">Puzzle Solved!</p>
+				<div class="flex gap-1">
+
+				<Button
+					on:click={reloadPage}
+					variant="gradient"
+					gradient={{ from: 'teal', to: 'yellow', deg: 46 }}
+					radius="xl"
+					size="lg"
+					class="w-32"
+				>
+					Restart
+				</Button>
+				<Button
+					on:click={() => {
+						window.location.href = '/';
+					}}
+					variant="gradient"
+					gradient={{ from: 'teal', to: 'yellow', deg: 46 }}
+					radius="xl"
+					size="lg"
+					class="w-32"
+				>
+					Other Puzzle
+				</Button>
+				</div>
+			</Group>
 		</Overlay>
 	{/if}
 </div>

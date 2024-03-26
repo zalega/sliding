@@ -16,8 +16,8 @@
 <div class="h-[100px]">
 	{#if visible}
 		<p
-			in:flipboard={{ duration: 400 }}
-			class="flex justify-center text-3xl font-bold underline m-10"
+			in:flipboard={{ duration: 1300 }}
+			class="flex justify-center text-5xl font-bold underline m-10"
 		>
 			Willkommen zu meinem personalisiertem Sliding Puzzle!
 		</p>
@@ -26,17 +26,17 @@
 	{/if}
 </div>
 
-<div class="flex gap-5 justify-center">
+<div class="flex gap-5 justify-center h-[800px] items-center">
 	<SelectionComponent
 		mainTitle="3 x 3 Puzzle"
-		text="Zweite Auswahl"
+		text="Ein einfaches Slidding Puzzle. Wähle diese Auswahl, um zu beginnen."
 		image="src/lib/images/first.png"
 		selection={1}
 		link="/main?selection=1"
 	/>
 	<SelectionComponent
 		mainTitle="4 x 4 Puzzle"
-		text="Zweite Auswahl"
+		text="Eine ausgewogene Pizza. Wähle diese Auswahl, um zu beginnen."
 		image="src/lib/images/second.png"
 		selection={2}
 		link="/main?selection=2"
@@ -44,7 +44,7 @@
 
 	<SelectionComponent
 		mainTitle="5 x 5 Puzzle"
-		text="Zweite Auswahl"
+		text="Das beste zum Schluss. Wähle diese Auswahl, um zu beginnen."
 		image="src/lib/images/third.png"
 		selection={3}
 		link="/main?selection=3"

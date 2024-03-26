@@ -12,7 +12,7 @@
 </script>
 
 <a on:click={() => setSelection(selection)} href={link}>
-	<Card shadow="sm" padding="lg" class="w-[300px]">
+	<Card shadow="sm" padding="lg" class="w-[300px] shadow-md hover:bg-slate-50">
 		<Card.Section padding="lg">
 			<Image src={image} height={300} alt="puzzle image" />
 		</Card.Section>
