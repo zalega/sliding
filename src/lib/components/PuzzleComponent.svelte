@@ -117,7 +117,7 @@
 			cols.set(5);
 		}
 		const image = new Image();
-		image.src = `/src/lib/images${imageUrl[selection - 1]}`;
+		image.src = `/images${imageUrl[selection - 1]}`;
 
 		await new Promise<void>((resolve, reject) => {
 			image.onload = () => {

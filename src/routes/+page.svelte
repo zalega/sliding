@@ -30,14 +30,14 @@
 	<SelectionComponent
 		mainTitle="3 x 3 Puzzle"
 		text="Ein einfaches Slidding Puzzle. Wähle diese Auswahl, um zu beginnen."
-		image="src/lib/images/first.jpg"
+		image="/images/first.jpg"
 		selection={1}
 		link="/main?selection=1"
 	/>
 	<SelectionComponent
 		mainTitle="4 x 4 Puzzle"
 		text="Eine ausgewogene Pizza. Wähle diese Auswahl, um zu beginnen."
-		image="src/lib/images/second.jpg"
+		image="/images/second.jpg"
 		selection={2}
 		link="/main?selection=2"
 	/>
@@ -45,7 +45,7 @@
 	<SelectionComponent
 		mainTitle="5 x 5 Puzzle"
 		text="Das beste zum Schluss. Wähle diese Auswahl, um zu beginnen."
-		image="src/lib/images/third.jpg"
+		image="/images/third.jpg"
 		selection={3}
 		link="/main?selection=3"
 	/>

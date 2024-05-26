@@ -1,32 +1,20 @@
-# Stage 1: Build the SvelteKit application
-FROM node:18 AS build
+# Use the official Node.js image as the base image
+FROM node:18.17.1-alpine
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock)
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the application code
+# Copy the application files into the working directory
 COPY . .
 
-# Build the SvelteKit application
+# Install the application dependencies
 RUN npm run build
+RUN npm install pm2 -g
 
-# Stage 2: Serve the static files using Nginx
-FROM nginx:alpine
+# Define the entry point for the container
 
-# Remove default nginx website
-RUN rm -rf /usr/share/nginx/html/*
+EXPOSE 3000
 
-# Copy the built SvelteKit output to the Nginx HTML directory
-COPY --from=build /app/.svelte-kit/output /usr/share/nginx/html
-
-# Expose port 4000
-EXPOSE 4000
-
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+CMD [ "pm2-runtime", "start", "pm2.json" ]
