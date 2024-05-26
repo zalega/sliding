@@ -15,7 +15,7 @@
 	let intitialLoad = true;
 	let isLoading = true;
 
-	const imageUrl = ['/first.png', '/second.png', '/third.png'];
+	const imageUrl = ['/first.jpg', '/second.jpg', '/third.jpg'];
 
 	type PuzzleType = number[][];
 
