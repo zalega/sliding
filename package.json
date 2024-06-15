@@ -37,6 +37,7 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-node": "^5.0.1",
+		"@sveltejs/adapter-static": "^3.0.2",
 		"@svelteuidev/composables": "^0.15.4",
 		"@svelteuidev/core": "^0.15.4",
 		"@svelteuidev/motion": "^0.15.4"
